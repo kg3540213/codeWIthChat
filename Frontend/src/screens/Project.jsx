@@ -115,13 +115,16 @@ const Project = () => {
   }
 
   const send = () => {
-    sendMessage("project-message", {
-      message,
-      sender: user,
-    });
-    setMessages((prevMessages) => [...prevMessages, { sender: user, message }]); // Update messages state
-    setMessage("");
-  };
+  if (!message.trim()) return;
+
+  sendMessage("project-message", {
+    message,
+    sender: user,
+  });
+
+  setMessage("");
+};
+
 
   function WriteAiMessage(message) {
     const messageObject = JSON.parse(message);

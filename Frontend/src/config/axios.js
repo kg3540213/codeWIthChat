@@ -14,6 +14,12 @@ axiosInstance.interceptors.request.use(
     } else if (config.headers && config.headers.Authorization) {
       delete config.headers.Authorization;
     }
+    
+    // Don't set Content-Type for FormData - let browser handle it
+    if (config.data instanceof FormData) {
+      delete config.headers['Content-Type'];
+    }
+    
     return config;
   },
   (error) => Promise.reject(error)

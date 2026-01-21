@@ -19,15 +19,26 @@ export const UserProvider = ({ children }) => {
     useEffect(() => {
         const token = localStorage.getItem('token');
         if (!token) return;
-        if (!user) {
+        
+        const storedUser = localStorage.getItem('user');
+        if (!storedUser) {
             axios
                 .get('/users/profile')
                 .then((res) => {
-                    if (res.data?.user) setUser(res.data.user);
+                    if (res.data?.user) {
+                        setUser(res.data.user);
+                        localStorage.setItem('user', JSON.stringify(res.data.user));
+                    }
                 })
                 .catch((err) => {
                     console.log('Failed to fetch profile:', err?.response?.data || err.message);
                 });
+        } else {
+            try {
+                setUser(JSON.parse(storedUser));
+            } catch (err) {
+                console.log('Failed to parse stored user:', err);
+            }
         }
     }, []);
 

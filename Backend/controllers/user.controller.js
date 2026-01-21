@@ -12,9 +12,8 @@ export const createUserController = async (req, res) => {
     }
     try {
         const {name,email, password} = req.body;
-        const profilePic = req.file
-      ? req.file.path   // 👈 Cloudinary URL
-      : "";
+        const profilePic = req.file?.path || "";
+        
         const hashedPassword = await userModel.hashPassword(password);
         const user = await userModel.create({ name, email, password: hashedPassword, profilePic });
 
@@ -24,6 +23,7 @@ export const createUserController = async (req, res) => {
 
         res.status(201).json({ user, token });
     } catch (error) {
+        console.error('Register error:', error);
         res.status(400).send(error.message);
     }
 }

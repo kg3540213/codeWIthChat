@@ -56,8 +56,17 @@ io.use(async (socket, next) => {
 })
 
 
-io.on('connection', socket => {
-    socket.roomId = socket.project._id.toString()
+io.on("connection", (socket) => {
+  socket.roomId = socket.project._id.toString();
+  socket.join(socket.roomId);
+
+  console.log(
+    "JOINED ROOM:",
+    socket.roomId,
+    "SOCKETS:",
+    io.sockets.adapter.rooms.get(socket.roomId)?.size
+  );
+// });
 
 
     console.log('a user connected');
@@ -71,7 +80,8 @@ io.on('connection', socket => {
         const message = data.message;
 
         const aiIsPresentInMessage = message.includes('@ai');
-        socket.broadcast.to(socket.roomId).emit('project-message', data)
+        io.to(socket.roomId).emit('project-message', data)
+
 
         if (aiIsPresentInMessage) {
 
